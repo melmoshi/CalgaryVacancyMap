@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+    
+    <head>
+        <title>Population Map</title>
+        <meta name="description" content="Vacancy Rates in Calgary">
+        <script src='https://api.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.js'></script>
+        <link href='https://api.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css' rel='stylesheet' />
+        <link rel="stylesheet" href="main.css">
+        
+    </head>
+    
+    <body>
+        
+        <div id='map'>  </div>
+        
+        <div class='map-overlay' id='features'>
+            <h2>Vacancy Rates 2016</h2>
+            <div id='pd'>
+                <p>Hover over a community!</p>
+            </div>
+        </div>
+        
+        <div class='map-overlay' id='legend'>  </div>
+        
+        
+<!--  JAVASCRIPT   -->
+        <script>
+            mapboxgl.accessToken = 'pk.eyJ1IjoibWVsYW5pZW1vc2hpIiwiYSI6ImNqY2dvZ2JreTFweDMyd256Z3AwbWRwbTcifQ.41jzB_VX6RHd62jGDQiVyg';
+            
+            var map = new mapboxgl.Map({
+                container: 'map', // container id
+                style: 'mapbox://styles/melaniemoshi/cjcfee4cz5cf92roepzeoivx4' // replace this with your style URL
+                });
+               
+            
+            map.on('load', function() {
+            // the rest of the code will go in here
+                
+            //LEGEND:    
+            var layers = ['0-2%', '2.1-5%', '5.1-7%', '7.1-10%', '10.1-14%', '14.1-21%'];
+            var colors = ['#edf8e9', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'];
+                
+            for (i = 0; i < layers.length; i++) {
+              var layer = layers[i];
+              var color = colors[i];
+              var item = document.createElement('div');
+              var key = document.createElement('span');
+              key.className = 'legend-key';
+              key.style.backgroundColor = color;
+
+              var value = document.createElement('span');
+              value.innerHTML = layer;
+              item.appendChild(key);
+              item.appendChild(value);
+              legend.appendChild(item);
+            }
+                
+            map.getCanvas().style.cursor = 'default';
+            map.fitBounds([[-114.356, 50.827], [-113.841,51.218]]);
+                
+                  map.on('mousemove', function(e) {
+                  var community = map.queryRenderedFeatures(e.point, {
+                    layers: ['vacancy2016']
+                  });
+
+                  if (community.length > 0) {
+                    
+                      if (community[0].properties.VacantRate > 0) {
+                          document.getElementById('pd').innerHTML = 
+                              '<h3><strong>' + community[0].properties.name + 
+                              '</strong></h3><p><strong><em>' + community[0].properties.VacantRate + '%</strong> vacancy rate</em></p>' +
+                              '<p><strong><em>' + community[0].properties.dwellings + '</strong> total units</em></p>' +
+                              '\n' +
+                              '<p><strong><em>' + community[0].properties.apartment + '</strong> apartment units</em></p>' +
+                              '<p><strong><em>' + community[0].properties.duplex + '</strong> duplex units</em></p>' +
+                              '<p><strong><em>' + community[0].properties.multi_plex + '</strong> multiplex units units</em></p>'
+                              ;
+                      } else {
+                          document.getElementById('pd').innerHTML = '<h3><strong>' + community[0].properties.name + '</strong></h3><p><strong><em>' +  '</strong> Information not available. </em></p>';
+                      }
+                  } else {
+                    document.getElementById('pd').innerHTML = '<p>Hover over a community!</p>';
+                  }
+                }); 
+
+            });
+            
+            
+        </script>
+<!--  JAVASCRIPT   -->        
+        
+        
+    </body>
+    
+    
+</html>
