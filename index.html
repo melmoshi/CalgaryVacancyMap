@@ -9,6 +9,9 @@
         <link href='https://api.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css' rel='stylesheet' />
         <link rel="stylesheet" href="main.css">
         
+        <!--  FONTS  -->
+        <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+        
     </head>
     
     <body>
@@ -22,7 +25,16 @@
             </div>
         </div>
         
-        <div class='map-overlay' id='legend'>  </div>
+        <div class='map-overlay' id='legend'> 
+        <P id='rate'><strong>Vacancy Rates</strong></P>
+        </div>
+        
+        <div class='map-overlay' id='info'>
+            <P><strong>Moshi - 2018</strong></P>
+            <P>data.calgary.ca</P>
+            <P>Census by Community 2016</P>         
+
+        </div>
         
         
 <!--  JAVASCRIPT   -->
@@ -39,7 +51,7 @@
             // the rest of the code will go in here
                 
             //LEGEND:    
-            var layers = ['0-2%', '2.1-5%', '5.1-7%', '7.1-10%', '10.1-14%', '14.1-21%'];
+            var layers = ['0-2%', '2-5%', '5-7%', '7-10%', '10-14%', '14-21%'];
             var colors = ['#edf8e9', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'];
                 
             for (i = 0; i < layers.length; i++) {
@@ -70,15 +82,15 @@
                       if (community[0].properties.VacantRate > 0) {
                           document.getElementById('pd').innerHTML = 
                               '<h3><strong>' + community[0].properties.name + 
-                              '</strong></h3><p><strong><em>' + community[0].properties.VacantRate + '%</strong> vacancy rate</em></p>' +
-                              '<p><strong><em>' + community[0].properties.dwellings + '</strong> total units</em></p>' +
+                              '</strong></h3><p><strong>' + community[0].properties.VacantRate + '%</strong> vacancy rate</p>' +
+                              '<p><strong>' + community[0].properties.dwellings + '</strong> total units</p>' +
                               '\n' +
-                              '<p><strong><em>' + community[0].properties.apartment + '</strong> apartment units</em></p>' +
-                              '<p><strong><em>' + community[0].properties.duplex + '</strong> duplex units</em></p>' +
-                              '<p><strong><em>' + community[0].properties.multi_plex + '</strong> multiplex units units</em></p>'
+                              '<p><strong>' + community[0].properties.apartment + '</strong> apartment units</p>' +
+                              '<p><strong>' + community[0].properties.duplex + '</strong> duplex units</p>' +
+                              '<p><strong>' + community[0].properties.multi_plex + '</strong> multiplex units units</p>'
                               ;
                       } else {
-                          document.getElementById('pd').innerHTML = '<h3><strong>' + community[0].properties.name + '</strong></h3><p><strong><em>' +  '</strong> Information not available. </em></p>';
+                          document.getElementById('pd').innerHTML = '<h3><strong>' + community[0].properties.name + '</strong></h3><p><strong>' +  '</strong> Information not available. Sorry!</p>';
                       }
                   } else {
                     document.getElementById('pd').innerHTML = '<p>Hover over a community!</p>';
