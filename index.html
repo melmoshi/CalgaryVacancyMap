@@ -61,10 +61,11 @@
             newMap(mapStyle);
             
             //when 2016 is clicked, load new map
-            btn2016.addEventListener("click",function(){          
+            btn2016.addEventListener("click",function(){
                 
-                newMap(mapStyle);  
                 mapStyle = 'mapbox://styles/melaniemoshi/cjcfee4cz5cf92roepzeoivx4';
+                newMap(mapStyle);  
+                
                 
                 //if legend has chilren, remove them
                 while (leg.firstChild) {
