@@ -19,7 +19,7 @@
         <div id='map'>  </div>
         
         <div class='map-overlay' id='features'>
-            <h2>Vacancy Rates 2016</h2>
+            <h2 id="yearTitle">Vacancy Rates 2017</h2>
             <div id='pd'>
                 <p>Hover over a community!</p>
             </div>
@@ -33,25 +33,107 @@
             <P><strong>Moshi - 2018</strong></P>
             <P>data.calgary.ca</P>
             <P>Census by Community 2016</P>         
-
+        </div>
+        
+        <div class='map-overlay' id='year'>
+            <P id="2016">Year 2016</P> 
+            <P id="2017" class="bold">Year 2017</P>  
         </div>
         
         
-<!--  JAVASCRIPT   -->
+<!--  JAVASCRIPT   ----------------------------------------------------------------------------------->
+        
         <script>
+            
             mapboxgl.accessToken = 'pk.eyJ1IjoibWVsYW5pZW1vc2hpIiwiYSI6ImNqY2dvZ2JreTFweDMyd256Z3AwbWRwbTcifQ.41jzB_VX6RHd62jGDQiVyg';
             
-            var map = new mapboxgl.Map({
-                container: 'map', // container id
-                style: 'mapbox://styles/melaniemoshi/cjcfee4cz5cf92roepzeoivx4' // replace this with your style URL
-                });
-               
+            // Here we select our year DOM elements //
+            const btn2016 = document.getElementById("2016");
+            const btn2017 = document.getElementById("2017");
+            const yearTitle = document.getElementById("yearTitle");
+            var leg = document.getElementById("legend");
+
+            // initialzing map variable:
+            var map;
+            var mapStyle = "mapbox://styles/melaniemoshi/cjcwwnn7v0m0p2soauoqdvqf4";
             
+            //run on pageload (create new map (default map))
+            newMap(mapStyle);
+            
+            //when 2016 is clicked, load new map
+            btn2016.addEventListener("click",function(){          
+                
+                newMap(mapStyle);  
+                mapStyle = 'mapbox://styles/melaniemoshi/cjcfee4cz5cf92roepzeoivx4';
+                
+                //if legend has chilren, remove them
+                while (leg.firstChild) {
+                    leg.removeChild(leg.firstChild);
+                }
+           
+                //create "Vacancy Rates" for legend title
+                var newLegP = document.createElement("p");
+                newLegP.setAttribute("id","rate");
+                newLegP.innerHTML="<strong>Vacancy Rates</strong>";
+                leg.appendChild(newLegP);
+                
+                btn2016.classList.toggle("bold");
+                btn2017.classList.toggle("bold");
+                yearTitle.innerHTML="Vacancy Rates 2016";
+                
+                //runs 'onLoad', which loads all the hover information
+                map.on('load', function() {
+                onLoad();
+            });
+                
+            })
+            
+            btn2017.addEventListener("click",function(){
+                
+                
+                mapStyle = 'mapbox://styles/melaniemoshi/cjcwwnn7v0m0p2soauoqdvqf4';
+                newMap(mapStyle);
+                
+                while (leg.firstChild) {
+                    leg.removeChild(leg.firstChild);
+                }
+                
+                var newLegP = document.createElement("p");
+                newLegP.setAttribute("id","rate");
+                newLegP.innerHTML="<strong>Vacancy Rates</strong>";
+                leg.appendChild(newLegP);
+                
+                btn2017.classList.toggle("bold");
+                btn2016.classList.toggle("bold");
+                yearTitle.innerHTML="Vacancy Rates 2017";
+                
+                map.on('load', function() {
+                onLoad();
+            });
+                
+            })
+            
+            
+           
+            
+            function newMap(styleURL){
+                map = new mapboxgl.Map({
+                container: 'map', // container id
+                style: styleURL // replace this with your style URL
+                });
+            }
+            
+            //for default map (intial page load)
             map.on('load', function() {
+                onLoad();
+            });
+            
+            function onLoad(){
+                                console.log("map loaded");
             // the rest of the code will go in here
                 
             //LEGEND:    
-            var layers = ['0-2%', '2-5%', '5-7%', '7-10%', '10-14%', '14-21%'];
+            var layers = ['0-2%', '2-5%', '5-7%', '7-10%', '10-15%', '15%+'];
             var colors = ['#edf8e9', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'];
                 
             for (i = 0; i < layers.length; i++) {
@@ -74,7 +156,7 @@
                 
                   map.on('mousemove', function(e) {
                   var community = map.queryRenderedFeatures(e.point, {
-                    layers: ['vacancy2016']
+                    layers: ['vacancy']
                   });
 
                   if (community.length > 0) {
@@ -97,7 +179,7 @@
                   }
                 }); 
 
-            });
+            }
             
             
         </script>
