@@ -3,7 +3,7 @@
 <html>
     
     <head>
-        <title>Population Map</title>
+        <title>Vacancy Map</title>
         <meta name="description" content="Vacancy Rates in Calgary">
         <script src='https://api.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.js'></script>
         <link href='https://api.mapbox.com/mapbox-gl-js/v0.43.0/mapbox-gl.css' rel='stylesheet' />
@@ -11,6 +11,9 @@
         
         <!--  FONTS  -->
         <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+        
+        <!-- Title Icon -->
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
         
     </head>
     
@@ -30,9 +33,10 @@
         </div>
         
         <div class='map-overlay' id='info'>
-            <P><strong>Moshi - 2018</strong></P>
+            <P>Moshi - 2018</P>
             <P>data.calgary.ca</P>
-            <P>Census by Community 2016</P>         
+            <P>Census by Community</P>  
+            <a id="mapsLink" href="https://melmoshi.github.io" target="_blank"><strong>View More Maps</strong></a>
         </div>
         
         <div class='map-overlay' id='year'>
@@ -120,9 +124,13 @@
             function newMap(styleURL){
                 map = new mapboxgl.Map({
                 container: 'map', // container id
-                style: styleURL // replace this with your style URL
+                style: styleURL, // replace this with your style URL
+                center: [-114.0708, 51.0306],
+                zoom: 10.15
                 });
             }
+            
+            
             
             //for default map (intial page load)
             map.on('load', function() {
@@ -130,12 +138,12 @@
             });
             
             function onLoad(){
-                                console.log("map loaded");
+                 console.log("map loaded");
             // the rest of the code will go in here
                 
             //LEGEND:    
-            var layers = ['0-2%', '2-5%', '5-7%', '7-10%', '10-15%', '15%+'];
-            var colors = ['#edf8e9', '#c7e9c0', '#a1d99b', '#74c476', '#31a354', '#006d2c'];
+            var layers = ['0-2%', '2-4%', '4-6%', '6-9%', '9-13%', '13%+'];
+            var colors = ['#edf8e9', 'hsl(110, 48%, 87%)', 'hsl(114, 45%, 78%)', '#74c476', '#31a354', '#006d2c'];
                 
             for (i = 0; i < layers.length; i++) {
               var layer = layers[i];
@@ -153,7 +161,11 @@
             }
                 
             map.getCanvas().style.cursor = 'default';
-            map.fitBounds([[-114.356, 50.827], [-113.841,51.218]]);
+            //map.fitBounds([[-114.356, 50.827], [-113.841,51.218]]);
+            //map.center: [-114.999732, 50.4374];
+            //map.zoom: 11;
+                
+                
                 
                   map.on('mousemove', function(e) {
                   var community = map.queryRenderedFeatures(e.point, {
@@ -164,16 +176,16 @@
                     
                       if (community[0].properties.VacantRate > 0) {
                           document.getElementById('pd').innerHTML = 
-                              '<h3><strong>' + community[0].properties.name + 
-                              '</strong></h3><p><strong>' + community[0].properties.VacantRate + '%</strong> vacancy rate</p>' +
-                              '<p><strong>' + community[0].properties.dwellings + '</strong> total units</p>' +
-                              '\n' +
+                              '<h3 id="commName"><strong>' + community[0].properties.name + 
+                              '</strong></h3><p id="subheading"><strong>' + community[0].properties.VacantRate + '% vacancy rate</p>' +
+                              '<p id="subheading"><strong>' + community[0].properties.dwellings + '</strong> total units</strong></p>' +
+                              '\n' + '\n' +
                               '<p><strong>' + community[0].properties.apartment + '</strong> apartment units</p>' +
+                              '<p><strong>' + community[0].properties.town_house + '</strong> townhouse units</p>' +
                               '<p><strong>' + community[0].properties.duplex + '</strong> duplex units</p>' +
-                              '<p><strong>' + community[0].properties.multi_plex + '</strong> multiplex units units</p>'
-                              ;
+                              '<p><strong>' + community[0].properties.multi_plex + '</strong> multiplex units</p>';
                       } else {
-                          document.getElementById('pd').innerHTML = '<h3><strong>' + community[0].properties.name + '</strong></h3><p><strong>' +  '</strong> Information not available. Sorry!</p>';
+                          document.getElementById('pd').innerHTML = '<h3 id="commName"><strong>' + community[0].properties.name + '</strong></h3><p><strong>' +  '</strong> Information not available. Sorry!</p>';
                       }
                   } else {
                     document.getElementById('pd').innerHTML = '<p>Hover over a community!</p>';
